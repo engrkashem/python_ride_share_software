@@ -1,4 +1,5 @@
 import hashlib
+from random import randint
 from brta import BRTA
 from vehicles import Car, Bike, Cng
 from ride_manager import uber
@@ -12,9 +13,18 @@ class User:
         self.name = name
         self.email = email
         pwd_encrypt = hashlib.md5(password.encode()).hexdigest()
-        with open('users.txt', 'w') as file:
-            file.write(f'{email} {pwd_encrypt}')
-        file.close()
+        exists = False
+        with open('users.txt', 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                if self.email in line:
+                    exists = True
+        f.close()
+
+        if not exists:
+            with open('users.txt', 'a') as file:
+                file.write(f'{email} {pwd_encrypt} ')
+            file.close()
         print(self.name, 'User is created')
 
     @staticmethod
@@ -24,7 +34,12 @@ class User:
             lines = file.readlines()
             for line in lines:
                 if email in line:
-                    stored_password = line.split(' ')[1]
+                    line_list = line.split(' ')
+                    for i, val in enumerate(line_list):
+                        if email == val:
+                            stored_password = line_list[i+1]
+                            break
+                    # stored_password = line.split(' ')[1]
         file.close()
         hashed_password = hashlib.md5(password.encode()).hexdigest()
         if hashed_password == stored_password:
@@ -34,7 +49,7 @@ class User:
 
 
 class Rider(User):
-    def __init__(self, location, balance, name, email, password) -> None:
+    def __init__(self, name, email, password, location, balance,) -> None:
         self.location = location
         self.balance = balance
         super().__init__(name, email, password)
@@ -53,7 +68,7 @@ class Rider(User):
 
 
 class Driver(User):
-    def __init__(self, location, license, name, email, password) -> None:
+    def __init__(self, name, email, password, location, license) -> None:
         self.location = location
         self.license = license
         self.valid_driver = license_authority.validate_license(email, license)
@@ -87,7 +102,7 @@ class Driver(User):
         self.earnings += fare
 
 
-hero = User('Hero Gadha', 'hero@nayak.com', 'herohero')
-User.log_in('hero@nayak.com', 'herohero')
+rider1 = Rider('Rider1', 'rider1@gmail.com', 'rider1', randint(0, 100), 5000)
 
-kuber = Driver(54, 999, 'Kuber Majhi', 'kuber@majhi.com', 'kopilajaisna',)
+rider2 = Rider('Rider2', 'rider2@gmail.com', 'rider2', randint(0, 100), 5000)
+rider1.log_in(email='rider1@gmail.com', password='rider1')
