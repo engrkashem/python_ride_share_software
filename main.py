@@ -27,5 +27,36 @@ class User:
             print('Invalid User')
 
 
+class Rider(User):
+    def __init__(self, location, balance, name, email, password) -> None:
+        self.location = location
+        self.balance = balance
+        super().__init__(name, email, password)
+
+    def set_location(self, location):
+        self.location = location
+
+    def get_location(self):
+        return self.location
+
+    def request_a_trip(self, destination):
+        pass
+
+    def start_a_trip(self, fare):
+        self.balance -= fare
+
+
+class Driver(User):
+    def __init__(self, location, license, name, email, password) -> None:
+        self.location = location
+        self.license = license
+        self.earnings = 0
+        super().__init__(name, email, password)
+
+    def start_a_trip(self, destination, fare):
+        self.location = destination
+        self.earnings += fare
+
+
 hero = User('Hero Gadha', 'hero@nayak.com', 'herohero')
 User.log_in('hero@nayak.com', 'abc')
