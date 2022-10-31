@@ -1,4 +1,6 @@
-from abc import ABC, abstractclassmethod, abstractmethod
+from abc import ABC, abstractmethod
+
+from pyautogui import sleep
 
 
 class Vehicle(ABC):
@@ -29,9 +31,15 @@ class Car(Vehicle):
     def __init__(self, vehicle_type, license_no, rate, driver) -> None:
         super().__init__(vehicle_type, license_no, rate, driver)
 
-    def start_driving(self):
+    def start_driving(self, start, destination):
         self.status = 'unavailable'
-        print(self.vehicle_type, self.license_no, 'started')
+        print(self.vehicle_type, self.license_no, 'started for')
+        distance = abs(start-destination)
+        for i in range(0, distance):
+            sleep(0.5)
+            print(
+                f'Driving: {self.license_no} car. Current position: {i} of {distance}')
+        self.trip_finish()
 
     def trip_finish(self):
         self.status = 'available'
